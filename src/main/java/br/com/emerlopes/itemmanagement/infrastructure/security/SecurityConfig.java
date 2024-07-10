@@ -39,7 +39,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/produtos/*").hasRole(UserRole.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/produtos/jobs").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/produtos/cadastrar-produtos").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
