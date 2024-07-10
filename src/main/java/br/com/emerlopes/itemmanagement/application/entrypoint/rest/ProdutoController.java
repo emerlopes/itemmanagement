@@ -52,7 +52,11 @@ public class ProdutoController {
     }
 
     @PostMapping("/jobs")
-    public List<ProdutoDomainEntity> executarJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public List<ProdutoDomainEntity> executarJob() throws
+            JobInstanceAlreadyCompleteException,
+            JobExecutionAlreadyRunningException,
+            JobParametersInvalidException,
+            JobRestartException {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("timestamp", Calendar.getInstance().getTime())
