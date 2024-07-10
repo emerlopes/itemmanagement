@@ -6,7 +6,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -45,47 +44,52 @@ public class SecurityFilter extends OncePerRequestFilter {
             final HttpServletRequest request,
             final HttpServletResponse response,
             final FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) throws IOException {
 
-        final var token = getToken(request);
+        try {
+            final var token = getToken(request);
 
-        JWTVerifier verifier = JWT.require(getAlgorithm("mySimpleSecret123"))
-                .withIssuer("API")
-                .build();
-
-        assert token != null;
-        final var jwt = verifier.verify(token.replace("Bearer ", ""));
-        final var login = jwt.getSubject();
-        final var roles = jwt.getClaim("roles").asList(String.class);
-
-        if (roles.toString().contains(UserRole.ADMIN.name())) {
-            final var tokenFromUser = "Bearer";
-            final var customerByLogin = customerauthenticationClient.getCustomerByLogin(tokenFromUser, login);
-
-            if (customerByLogin.isEmpty()) {
-                logger.error("User not found for login: {}", login);
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            final var authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .toList();
-
-            List<String> roless = Arrays.asList(UserRole.ADMIN.getRole(), UserRole.USER.getRole());
-
-            final var userDetails = User
-                    .withUsername(login)
-                    .password("password")
-                    .authorities(authorities)
+            JWTVerifier verifier = JWT.require(getAlgorithm("mySimpleSecret123"))
+                    .withIssuer("API")
                     .build();
-            
-            final var authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, roless.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            assert token != null;
+            final var jwt = verifier.verify(token.replace("Bearer ", ""));
+            final var login = jwt.getSubject();
+            final var roles = jwt.getClaim("roles").asList(String.class);
+
+            if (roles.toString().contains(UserRole.ADMIN.name())) {
+                final var customerByLogin = customerauthenticationClient.getCustomerByLogin("Bearer " + token, login);
+
+                if (customerByLogin.isEmpty()) {
+                    logger.error("User not found for login: {}", login);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                final var authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+                List<String> roless = Arrays.asList(UserRole.ADMIN.getRole(), UserRole.USER.getRole());
+
+                final var userDetails = User
+                        .withUsername(login)
+                        .password("password")
+                        .authorities(authorities)
+                        .build();
+
+                final var authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, roless.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            logger.error("Error logging in: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
         }
-        filterChain.doFilter(request, response);
 
     }
 
