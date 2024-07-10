@@ -15,8 +15,4 @@ public class ProdutoRequestDTO {
     @JsonProperty("quantidade_solicitada")
     private Integer quantidadeSolicitada;
 
-    public ProdutoRequestDTO() {
-        // Construtor padrão
-    }
-
 }
