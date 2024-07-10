@@ -51,7 +51,7 @@ public class ProdutoController {
         this.logger = logger;
     }
 
-    @PostMapping("/jobs")
+    @PostMapping("/cadastrar-produtos")
     public List<ProdutoDomainEntity> executarJob() throws
             JobInstanceAlreadyCompleteException,
             JobExecutionAlreadyRunningException,

@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Optional;
 
-@FeignClient(name = "customerauthentication", url = "http://localhost:8080")
+@FeignClient(name = "customerauthentication", url = "http://localhost:8081/")
 public interface CustomerauthenticationClient {
 
     @GetMapping("/auth/validate")
     Optional<CustomResponseDTO<CustomerauthenticationResponseDTO>> getCustomerAuthentication(
-            @RequestHeader("Authorization") String authorization
+            final @RequestHeader("Authorization") String authorization
     );
 
-    @GetMapping("/users/login/{login}")
+    @GetMapping("/users/{login}")
     Optional<CustomResponseDTO<CustomerauthenticationResponseDTO>> getCustomerByLogin(
-            @RequestHeader("Authorization") String authorization,
-            @PathVariable("login") String login
+            final @RequestHeader(value = "Authorization") String authorization,
+            final @PathVariable("login") String login
     );
 
 }
