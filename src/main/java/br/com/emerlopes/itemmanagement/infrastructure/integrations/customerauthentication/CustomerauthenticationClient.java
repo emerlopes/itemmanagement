@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Optional;
 
-@FeignClient(name = "customerauthentication", url = "http://localhost:8081/")
+@FeignClient(name = "customerauthentication", url = "${application.customerauthentication.host}")
 public interface CustomerauthenticationClient {
 
     @GetMapping("/auth/validate")
