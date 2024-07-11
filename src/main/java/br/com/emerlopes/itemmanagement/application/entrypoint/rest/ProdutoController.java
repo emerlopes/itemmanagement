@@ -112,7 +112,9 @@ public class ProdutoController {
 
         logger.info("Estoque atualizado: {}", entidadeDominioResponse);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ProdutoDomainEntity.paraDTO(entidadeDominioResponse));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CustomResponseDTO<>().setData(ProdutoDomainEntity.paraDTO(entidadeDominioResponse))
+        );
     }
 
 

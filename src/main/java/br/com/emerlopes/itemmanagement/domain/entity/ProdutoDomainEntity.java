@@ -37,7 +37,10 @@ public class ProdutoDomainEntity {
     ) {
         return ProdutoDomainEntity.builder()
                 .id(idProduto)
-                .quantity(produtoRequestDTO.getQuantidadeSolicitada())
+                .name(produtoRequestDTO.getName())
+                .description(produtoRequestDTO.getDescription())
+                .price(produtoRequestDTO.getPrice())
+                .quantity(produtoRequestDTO.getQuantity())
                 .build();
     }
 

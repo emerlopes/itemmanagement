@@ -35,7 +35,9 @@ public class ProdutoDomainService implements ProdutoDomainRepository {
     }
 
     @Override
-    public ProdutoDomainEntity atualizarProduto(ProdutoDomainEntity produto) {
+    public ProdutoDomainEntity atualizarProduto(
+            final ProdutoDomainEntity produto
+    ) {
         final var irProduto = produto.getId();
         final var produtoEntity = produtoRepository.findById(irProduto);
 
@@ -43,11 +45,11 @@ public class ProdutoDomainService implements ProdutoDomainRepository {
             throw new BusinessException("Produto não encontrado", "");
         }
 
-        final var quantidadeEstoque = produtoEntity.get().getQuantity();
-        final var quantidadeVendida = produto.getQuantity();
-        final var quantidadeAtualizada = quantidadeEstoque - quantidadeVendida;
-
-        produtoEntity.get().setQuantity(quantidadeAtualizada);
+        produtoEntity.get().setName(produto.getName() != null ? produto.getName() : produtoEntity.get().getName());
+        produtoEntity.get().setDescription(produto.getDescription() != null ? produto.getDescription() : produtoEntity.get().getDescription());
+        produtoEntity.get().setQuantity(produto.getQuantity() != null ? produto.getQuantity() : produtoEntity.get().getQuantity());
+        produtoEntity.get().setPrice(produto.getPrice() != null ? produto.getPrice() : produtoEntity.get().getPrice());
+        produtoEntity.get().setQuantity(produto.getQuantity() != null ? produto.getQuantity() : produtoEntity.get().getQuantity());
 
         final var produtoEntityAtualizado = produtoRepository.save(produtoEntity.get());
 
