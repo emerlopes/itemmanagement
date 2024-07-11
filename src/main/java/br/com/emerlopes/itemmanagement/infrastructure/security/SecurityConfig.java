@@ -38,8 +38,10 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/produtos/*").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/produtos/listar-produtos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/produtos/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produtos/cadastrar-produtos").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/produtos/atualizar/{idProduto}").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
