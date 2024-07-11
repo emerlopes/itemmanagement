@@ -99,7 +99,7 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.OK).body(ProdutoDomainEntity.paraDTO(entidadeDominiuResponse));
     }
 
-    @PostMapping("atualizar/{idProduto}")
+    @PostMapping("/atualizar/{idProduto}")
     public ResponseEntity<?> atualizarEstoqueProduto(
             @PathVariable("idProduto") final Long idProduto,
             @RequestBody final ProdutoRequestDTO produtoRequestDTO
