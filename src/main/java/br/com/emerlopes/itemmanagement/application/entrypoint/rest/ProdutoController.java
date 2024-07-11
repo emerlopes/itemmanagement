@@ -2,6 +2,7 @@ package br.com.emerlopes.itemmanagement.application.entrypoint.rest;
 
 import br.com.emerlopes.itemmanagement.application.entrypoint.rest.dto.ProdutoRequestDTO;
 import br.com.emerlopes.itemmanagement.application.entrypoint.rest.dto.ProdutoResponseDTO;
+import br.com.emerlopes.itemmanagement.application.shared.CustomResponseDTO;
 import br.com.emerlopes.itemmanagement.domain.entity.ProdutoDomainEntity;
 import br.com.emerlopes.itemmanagement.domain.usecase.BuscarProdutoPorIdUseCase;
 import br.com.emerlopes.itemmanagement.domain.usecase.BuscarProdutosUseCase;
@@ -73,6 +74,15 @@ public class ProdutoController {
         }
 
         return buscarProdutosUseCase.execute();
+    }
+
+    @GetMapping("/listar-produtos")
+    public ResponseEntity<?> buscarProdutos() {
+        logger.info("Requisição para buscar produtos");
+
+        final var resultadoExecucao = buscarProdutosUseCase.execute();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponseDTO<>().setData(resultadoExecucao));
     }
 
     @GetMapping("/{id}")
